@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Set the X11 authorization
+KEY=$(xauth list $DISPLAY | awk '{ print $3 }')
+DCK_HOST=subl3.docker
+xauth add $DCK_HOST/unix:0 . $KEY
+
+# Run sublime
+docker run -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix \
+           -v $HOME/.Xauthority:/tmp/.Xauthority \
+           -e DISPLAY=unix$DISPLAY \
+           -e XAUTHORITY=/tmp/.Xauthority  \
+           -h $DCK_HOST \
+slok/sublimetext3
